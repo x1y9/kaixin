@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="Kaixin code check rules">
+
+<rule name="TransactionApiThrows"	message="Transaction API should not throw exception" class="net.sourceforge.pmd.lang.rule.XPathRule" language="java">
+	<properties>
+		<property name="xpath">
+			<value><![CDATA[
+//MethodDeclaration[../Annotation//Name[@Image='Transactionalxxx']]/NameList
+			]]></value>
+		</property>
+	</properties>
+</rule>
+
+	
+
+</ruleset>

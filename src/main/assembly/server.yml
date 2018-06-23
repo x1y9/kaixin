@@ -1,0 +1,22 @@
+server:
+  rootPath: /*
+  adminContextPath: /dropadmin
+  applicationContextPath: /
+  registerDefaultExceptionMappers: false
+  applicationConnectors:
+    - type: http
+      port: 8000
+#    - type: https
+#      port: 443
+#      keyStorePath: ./key.jks
+#      keyStorePassword: keypass
+#      validateCerts: false         
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: root
+  password:
+  url: jdbc:mysql://localhost:3306/kaixin
+view:
+  .ftl:
+    output_format: HTMLOutputFormat
+    template_exception_handler: ignore

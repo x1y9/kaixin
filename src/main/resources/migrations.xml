@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 		MySQLDatabase 	OracleDatabase 	SQLiteDatabase 	H2Database
+boolean 	BIT(1)			NUMBER(1)		BOOLEAN			BOOLEAN
+tinyint		TINYINT			NUMBER(3)		TINYINT			TINYINT
+int			INT				NUMBER(10)		INTEGER			INT
+mediumint	MEDIUMINT		MEDIUMINT		MEDIUMINT		MEDIUMINT
+bigint		BIGINT			NUMBER(38, 0)	BIGINT			BIGINT
+float		FLOAT			FLOAT			FLOAT			FLOAT
+double		DOUBLE		 	FLOAT(24)		DOUBLE			DOUBLE
+decimal		DECIMAL			DECIMAL			DECIMAL			DECIMAL
+number		numeric			NUMBER			NUMBER			NUMBER
+blob		LONGBLOB		BLOB			BLOB			BLOB
+datetime	datetime		TIMESTAMP		TEXT			TIMESTAMP
+time		time			DATE			time			time
+timestamp	TIMESTAMP		TIMESTAMP		TEXT			TIMESTAMP
+date		date			date			date			date
+char		CHAR			CHAR			CHAR			CHAR
+varchar		VARCHAR		  	VARCHAR2		VARCHAR			VARCHAR
+  * max  	21845			4000			~				65535
+nchar		NCHAR			NCHAR			NCHAR			NCHAR
+nvarchar	NVARCHAR		NVARCHAR2		NVARCHAR		NVARCHAR
+clob		LONGTEXT		CLOB			TEXT			CLOB
+currency	DECIMAL			NUMBER(15, 2)	REAL			DECIMAL
+uuid		char(36)		RAW(16)			TEXT			UUID
+-->
+ 
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="kaixin">
+        <createTable tableName="user">        
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account" type="varchar(255)" />
+            <column name="password" type="varchar(255)" />
+            <column name="name" type="varchar(255)" />
+            <column name="email" type="varchar(255)" />
+            <column name="createDate" type="datetime" />
+            <column name="isAdmin" type="boolean" defaultValue="false" />
+            <column name="disable" type="boolean" defaultValue="false" />
+            <column name="resetKey" type="varchar(255)" />
+            <column name="resetTime" type="datetime" />
+            <column name="description" type="clob" />
+        </createTable>
+        <createTable tableName="permission">        
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="users" type="varchar(4000)" />
+            <column name="model" type="varchar(255)" />
+            <column name="action" type="varchar(255)" />
+            <column name="fields" type="varchar(4000)" />
+            <column name="path" type="varchar(4000)" />
+        </createTable>	
+
+        <createTable tableName="scope">        
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="users" type="varchar(4000)" />
+            <column name="model" type="varchar(255)" />
+            <column name="filter" type="varchar(4000)" />
+        </createTable>	
+
+		    <createTable tableName="test">        
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="str" type="varchar(255)" />
+            <column name="num" type="bigint" />
+            <column name="createDate" type="date" />
+            <column name="createTime" type="datetime" />
+            <column name="bool" type="boolean" defaultValue="false" />
+            <column name="file" type="varchar(4000)"  />
+            <column name="txt" type="clob"/> 
+            <column name="rtf" type="clob"/>
+            <column name="rtf2" type="clob"/>
+        </createTable>
+
+        <insert tableName="user">
+            <column name="id" valueNumeric="1"/>
+            <column name="account" value="admin"/>
+            <column name="password" value="E06A9DB2F265670A20FAD7CCD5B0BCF5"/>
+            <column name="name" value="admin"/>
+            <column name="isadmin" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>

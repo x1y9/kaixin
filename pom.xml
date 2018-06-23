@@ -1,0 +1,265 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.kaixin</groupId>
+	<artifactId>kaixin</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0</version>
+	<name>kaixin</name>
+  
+	<properties>
+		<!-- dependency version -->
+		<dropwizard.version>0.8.1</dropwizard.version>    			
+		
+		<!-- other properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+   		<build.timestamp>${maven.build.timestamp}</build.timestamp>
+   		<maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
+		
+	</properties>
+
+	<dependencies>
+
+	
+	    <dependency>
+      		<groupId>io.dropwizard</groupId>
+      		<artifactId>dropwizard-migrations</artifactId>
+      		<version>${dropwizard.version}</version>
+    	</dependency>
+    		
+		<dependency>
+        	<groupId>io.dropwizard</groupId>
+        	<artifactId>dropwizard-assets</artifactId>
+        	<version>${dropwizard.version}</version>
+    	</dependency>		
+    	
+		<dependency>
+        	<groupId>io.dropwizard</groupId>
+        	<artifactId>dropwizard-views-freemarker</artifactId>
+        	<version>${dropwizard.version}</version>
+    	</dependency>
+    	
+    	<!--  use new version to set auto escape -->		
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.24-incubating</version>
+		</dependency>
+
+		
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.3.176</version>
+		</dependency>
+		
+		<dependency>
+      		<groupId>mysql</groupId>
+      		<artifactId>mysql-connector-java</artifactId>
+      		<version>5.1.34</version>
+    	</dependency>
+
+    	<dependency>  
+        	<groupId>org.glassfish.jersey.media</groupId>  
+        	<artifactId>jersey-media-multipart</artifactId>  
+        	<version>2.17</version>
+	    </dependency>
+
+    	<dependency>
+      		<groupId>org.apache.httpcomponents</groupId>
+      		<artifactId>httpclient</artifactId>
+      		<version>4.5.1</version>
+    	</dependency>
+    
+		<dependency>
+			<groupId>commons-dbutils</groupId>
+			<artifactId>commons-dbutils</artifactId>
+			<version>1.6</version>
+		</dependency>
+	    
+	    
+	    <dependency>
+	      <groupId>commons-io</groupId>
+	      <artifactId>commons-io</artifactId>
+	      <version>2.4</version>
+	    </dependency>
+	    
+	    <dependency>
+	      <groupId>org.apache.commons</groupId>
+	      <artifactId>commons-exec</artifactId>
+	      <version>1.3</version>
+	    </dependency>
+
+	    <dependency>
+	      <groupId>commons-codec</groupId>
+	      <artifactId>commons-codec</artifactId>
+	      <version>1.10</version>
+	    </dependency>
+	    	    	
+    	<dependency>
+    		<groupId>org.quartz-scheduler</groupId>
+    		<artifactId>quartz</artifactId>
+    		<version>1.7.3</version>
+    	</dependency>
+
+  
+
+	    <!--  send email -->
+   		<dependency>
+        	<groupId>javax.mail</groupId>
+        	<artifactId>mail</artifactId>
+        	<version>1.4.7</version>
+    	</dependency>	    
+
+		<dependency>
+        	<groupId>javax.activation</groupId>
+        	<artifactId>activation</artifactId>
+        	<version>1.1.1</version>
+    	</dependency>
+
+		<dependency>
+			<scope>provided</scope>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+	    <finalName>${project.artifactId}</finalName>
+	    <resources>
+		   <resource>
+		      <directory>src/main/resources</directory>
+		   </resource>
+		   <resource>
+		      <directory>src/main/resources</directory>
+		      <filtering>true</filtering>
+   		      <includes>
+			       <include>VERSION</include>
+			  </includes>
+		   </resource>
+		</resources>
+		
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+			    <configuration>
+            		<source>1.7</source>
+            		<target>1.7</target>
+          		</configuration>				
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.7</version>
+				<executions>
+					<execution>
+						<id>PMD</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- excludeRoot不起作用，只能用excludes -->
+					<excludes>
+						<exclude>**/org/**/*.java</exclude>
+					</excludes>
+					<rulesets>
+						<!-- 标准rule <ruleset>/rulesets/java/strictexception.xml</ruleset> -->
+						<ruleset>${basedir}/pmd-rules.xml</ruleset>
+					</rulesets>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.4</version>
+				<executions>
+					<execution>
+						<id>failing-on-high</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- <debug>true</debug> -->
+					<skip>${maven.test.skip}</skip>
+					<maxRank>9</maxRank>
+					<onlyAnalyze>com.kaixin.-</onlyAnalyze>
+				</configuration>
+			</plugin>
+
+			<plugin>
+			  <groupId>org.codehaus.mojo</groupId>
+			  <artifactId>exec-maven-plugin</artifactId>
+			  <version>1.3.2</version>
+			  <configuration>
+			      <!-- fix hang when exec from mvn command line -->
+			      <cleanupDaemonThreads>false</cleanupDaemonThreads>
+			  </configuration>
+			</plugin>	
+						
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
+			
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-shade-plugin</artifactId>
+			    <version>2.4.1</version>
+			    <configuration>
+			        <createDependencyReducedPom>false</createDependencyReducedPom>
+			        <filters>
+			            <filter>
+			                <artifact>*:*</artifact>
+			                <excludes>
+			                    <exclude>META-INF/*.SF</exclude>
+			                    <exclude>META-INF/*.DSA</exclude>
+			                    <exclude>META-INF/*.RSA</exclude>
+			                </excludes>
+			            </filter>
+			        </filters>
+			    </configuration>
+			    <executions>
+			        <execution>
+			            <phase>install</phase>
+			            <goals>
+			                <goal>shade</goal>
+			            </goals>
+			            <configuration>
+			                <transformers>
+			                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+			                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+			                        <mainClass>com.kaixin.app.MainApplication</mainClass>
+			                    </transformer>
+			                </transformers>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>			
+		</plugins>		
+	</build>
+
+</project>
