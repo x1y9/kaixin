@@ -2,6 +2,15 @@
 @set MAIN_CLASS=com.kaixin.app.MainApplication
 @set DEPLOY_DIR=target\deploy
 
+@java -version >nul 2>&1
+@IF %ERRORLEVEL% NEQ 0 echo you should install java7 & goto error_end
+@call mvn -version >nul 2>&1
+@IF %ERRORLEVEL% NEQ 0 echo you should install maven & goto error_end
+@call yarn -version >nul 2>&1
+@IF %ERRORLEVEL% NEQ 0 echo you should install yarn & goto error_end
+@call quasar --version >nul 2>&1
+@IF %ERRORLEVEL% NEQ 0 echo you should install quasar-cli & goto error_end
+
 :do_para
 @if  "%1"=="help" goto do_help
 @if  "%1"=="clean" goto do_clean
@@ -19,7 +28,7 @@
 
 :do_help
 @echo.
-@echo build script 
+@echo build script for kaixin framework
 @echo usage: build [command] [para] 
 @echo command can be:
 @echo   clean              : clean the project
@@ -110,6 +119,9 @@ goto end
 @REM restore from backup.sql after migrate
 java -classpath .\target\kaixin.jar org.h2.tools.RunScript -url jdbc:h2:./kaixin -user sa
 goto end
+
+:error_end
+@ver /ERROR >NUL 2>&1
 
 :end
 

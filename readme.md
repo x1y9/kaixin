@@ -1,13 +1,13 @@
 ﻿Kaixin是基于多个实际项目，提炼出的快速全栈开发框架:
 
-[演示](docs/kaixin-demo.gif)
+![演示](docs/kaixin-demo.gif)
 
-* 后端基于Java/Dropwiard/Jetty，单命令部署运行
+* 后端基于Java/Dropwizard/Jetty，单命令部署运行
 * 开发时使用内置H2数据库和内置Jetty，无需外部数据库和Tomcat依赖，调试方便
 * 前端基于Vue.js/Quasar, 内置Admin增删改查界面
 * 优化的前端代码非常轻量，公网部署加载速度快
 * 单命令部署、构建、运行
-* Profile驱动，无需修改一行代码，简化配置数据schema、UI
+* Profile驱动，无需修改代码，简化配置数据schema、UI
 * 数据库按版本migration，方便升级
 * 可单jar文件发布（前端代码打包进jar）
 * 简单权限模型（Beta版本）
