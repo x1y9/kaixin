@@ -2,8 +2,6 @@ server:
   rootPath: /*
   adminContextPath: /dropadmin
   applicationContextPath: /
-
-  #???
   registerDefaultExceptionMappers: false
   applicationConnectors:
     - type: http
@@ -29,8 +27,7 @@ view:
 #filter:
 #  com.kaixin.core.filter.HttpsFilter:
 #    httpsPort:443
-
 #servlet:
 #  com.kaixin.core.servlet.ProxyServlet:
 #    __urlPattern: /proxy/*
-#    targetUri: http://192.168.1.82/rest/wechat/reply
+#    targetUri: http://192.168.1.101

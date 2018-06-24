@@ -4,14 +4,17 @@
 
 * 后端基于Java/Dropwizard/Jetty，单命令部署运行
 * 开发时使用内置H2数据库和内置Jetty，无需外部数据库和Tomcat依赖，调试方便
-* 前端基于Vue.js/Quasar, 内置Admin增删改查界面
-* 优化的前端代码非常轻量，公网部署加载速度快
+* 内置Admin增删改查界面，基于Vue.js/Quasar, 
+* 优化的前端代码非常轻量，gzip后约220k，公网加载速度快
+* 后端集成Freemarker模板引擎，支持后端Render
 * 单命令部署、构建、运行
 * Profile驱动，无需修改代码，简化配置数据schema、UI
 * 数据库按版本migration，方便升级
 * 可单jar文件发布（前端代码打包进jar）
 * 简单权限模型（Beta版本）
 * 多语支持
+* 集成SMTP
+* 集成LDAP，可以和Windows域集成
 
 ## 运行
 安装好java7+, Maven 3+, Nodejs 8+, yarn
@@ -62,7 +65,7 @@ java -jar ****.jar db migrate server.yml
 * 通过http://localhost:8000/sys/metric, 查看服务器端性能统计.
 
 ## TODO
- * 权限设计
+ * 权限设计优化
  * grid列宽不能调整
  * File组件
  * Rich组件的图片
