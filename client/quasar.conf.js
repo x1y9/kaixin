@@ -8,7 +8,6 @@ module.exports = function (ctx) {
       'axios',
       // kaixin: if use lodash, 76k added, so just use our kaixin
       'kaixin'
-      // 'lodash'
     ],
     css: [
       'app.styl'

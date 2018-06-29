@@ -6,3 +6,6 @@ backup.sql
 app.properties
 client/yarn-error.log
 src/main/resources/public/admin/
+.classpath
+.project
+.settings/
