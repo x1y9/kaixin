@@ -26,7 +26,7 @@ export default new Vuex.Store({
     token: localStorage.getItem('token'),
     login: null, // loginUser, isAdmin, permissions
     profile: null, // 完整定义admin,models,modelsMap,
-    filter: {} // 列表界面的一些状态记录在这里，以便返回时保留位置
+    filter: {} // 列表界面的一些状态记录在这里，以便返回时保留参数
   },
   getters: {
     hasToken (state) {
@@ -48,7 +48,7 @@ export default new Vuex.Store({
       localStorage.removeItem('token')
     },
     setFilter (state, para) {
-      state.filter[para.model] = {search: para.search, page: para.page}
+      state.filter[para.model] = Object.assign(state.filter[para.model] || {}, para)
     },
     bootup (state, info) {
       state.profile = info.profile

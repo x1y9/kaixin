@@ -10,7 +10,7 @@
 
     <template slot="top-right" slot-scope="props">
       <q-search hide-underline v-model="search" />
-      <q-table-columns  v-model="visibleColumns" :columns="columns" />
+      <q-table-columns  v-model="visibleColumns" :columns="columns" @input="onVisibleColumnsChange"/>
       <!-- 全屏模式有时不能正常退出 -->
       <!-- <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen"/> -->
     </template>
@@ -68,6 +68,9 @@ export default {
   methods: {
     clearSelected: function () {
       this.selected = []
+    },
+    onVisibleColumnsChange: function (val) {
+      this.$store.commit('setFilter', {model: this.model, columns: val})
     },
     request: function ({ pagination }) {
       // 传进来的pagination不等于this.page, 传进来的filter等于this.search, 所以不用
@@ -137,17 +140,17 @@ export default {
   },
   created () {
     this.columns = []
-    if (this.$store.state.filter[this.model]) {
-      this.search = this.$store.state.filter[this.model].search
-      this.page = this.$store.state.filter[this.model].page
-    }
-
     for (let i = 0; i < this.viewDef.length; i++) {
       let item = this.viewDef[i]
       this.columns.push({label: item.label, name: item.name, field: item.name, align: 'left', sortable: true})
       if (i < 5) {
         this.visibleColumns.push(item.name)
       }
+    }
+    if (this.$store.state.filter[this.model]) {
+      this.search = this.$store.state.filter[this.model].search || this.search
+      this.page = this.$store.state.filter[this.model].page || this.page
+      this.visibleColumns = this.$store.state.filter[this.model].columns || this.visibleColumns
     }
     // 请求第一页数据
     this.request({pagination: this.page})
