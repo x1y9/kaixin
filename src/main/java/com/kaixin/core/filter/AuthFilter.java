@@ -39,7 +39,9 @@ public class AuthFilter implements ContainerRequestFilter {
 		ThreadLocalUtil.remove(KxConsts.TL_LOGIN_USER_NAME);
 
 		boolean onlyAdmin = StringUtil.matchPatterns(path, PropsUtil.getArray(PropsKeys.AUTH_ONLY_ADMIN_URLS));
+		boolean onlyLogin = StringUtil.matchPatterns(path, PropsUtil.getArray(PropsKeys.AUTH_ONLY_LOGIN_URLS));
 		boolean isAdmin = false;
+		boolean isGuest = true;
 
 		if (!AuthUtil.validateToken(authToken)) {
 			
@@ -63,6 +65,7 @@ public class AuthFilter implements ContainerRequestFilter {
 						.executeAndFetchFirstRow();
 								
 				if (loginUser != null) {
+					isGuest = false;
 					ThreadLocalUtil.set(KxConsts.TL_LOGIN_USER, loginUser);
 					ThreadLocalUtil.set(KxConsts.TL_LOGIN_USER_ID, loginUser.get(KxConsts.ID));
 					ThreadLocalUtil.set(KxConsts.TL_LOGIN_USER_NAME, loginUser.get(KxConsts.COL_USER_NAME));
@@ -71,7 +74,7 @@ public class AuthFilter implements ContainerRequestFilter {
 			}
 		}
 
-		if (!isAdmin && onlyAdmin)
+		if ((isGuest && onlyLogin) || (!isAdmin && onlyAdmin))
 			throw new WebApplicationException("unauthorized", HttpStatus.SC_UNAUTHORIZED);
 	}
 

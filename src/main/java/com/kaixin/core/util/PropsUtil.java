@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -69,11 +70,23 @@ public class PropsUtil {
     }
 
     public static String[] getArray(String key, String splitter) {
-        return getString(key).split(splitter);
+        String[] values = getString(key).split(splitter);
+        if (values.length > 0 && GetterUtil.isEmpty(values[values.length - 1])) {
+            return Arrays.copyOfRange(values,0,values.length - 1);
+        }
+        else {
+            return values;
+        }
     }
 
     public static String[] getArrayWithArg(String key, String splitter, Object... args) {
-        return getStringWithArg(key,args).split(splitter);
+        String[] values = getStringWithArg(key,args).split(splitter);
+        if (values.length > 0 && GetterUtil.isEmpty(values[values.length - 1])) {
+            return Arrays.copyOfRange(values,0,values.length - 1);
+        }
+        else {
+            return values;
+        }
     }
 
 //    public static Properties getProperties() {

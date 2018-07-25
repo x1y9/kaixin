@@ -27,8 +27,11 @@ public class PropsKeys {
     @PropsProperty(type = "boolean", defaultValue = "true", needRestart = false, forClient= true, help = "是否支持用户注册")
     public static final String AUTH_SIGNUP_ENABLE = "auth.signup.enable";
 
-    @PropsProperty(type = "string", defaultValue = "sys/.*", needRestart = false, help = "只能admin访问的url，逗号分隔")
+    @PropsProperty(type = "string", defaultValue = "sys/.*,api/dbmng/.*,api/logger/.*,api/metric/.*,api/property/.*", needRestart = false, help = "只能admin访问的url，逗号分隔")
     public static final String AUTH_ONLY_ADMIN_URLS = "auth.only.admin.urls";
+
+    @PropsProperty(type = "string", defaultValue = "", needRestart = false, help = "登录后才可访问的url，逗号分隔")
+    public static final String AUTH_ONLY_LOGIN_URLS = "auth.only.login.urls";
 
     @PropsProperty(type = "boolean", defaultValue = "true", needRestart = false, help = "进入后台是否需要认证")
     public static final String AUTH_BACKEND_NEED_AUTH = "auth.backend.need.auth";
