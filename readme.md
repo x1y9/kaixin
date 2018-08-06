@@ -73,6 +73,7 @@ java -jar ****.jar db migrate server.yml
  * 后端读写分离
  * 后端jdbc metric还是ns，需要重新封装jdbc
  * upload接口Edge上传文件名不对
+ * assets目录应该重定向到加/
 
 ## LICENSE
 MIT

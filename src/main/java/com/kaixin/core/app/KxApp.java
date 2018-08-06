@@ -76,11 +76,11 @@ public class KxApp extends Application<KxConfiguration> implements ServerLifecyc
     @Override
     public void initialize(Bootstrap<KxConfiguration> bootstrap) {
     	//因为jersey占据了/,这里的uri不能是/，只能用/public
-    	bootstrap.addBundle(new AssetsBundle("/public", "/public", "index.html"));
+    	bootstrap.addBundle(new AssetsBundle("/public", "/public", "index.html", "public"));
 		//多个分应用可以占据不同的url，通过proerty配置
 		for (String sub: PropsUtil.getArray(PropsKeys.SYS_ASSERT_PATH)) {
 			if (sub.trim().length() > 0) {
-				bootstrap.addBundle(new AssetsBundle("/" + sub.trim(), "/" + sub.trim(), "index.html"));
+				bootstrap.addBundle(new AssetsBundle("/" + sub.trim(), "/" + sub.trim(), "index.html", sub.trim()));
 			}
 		}
 

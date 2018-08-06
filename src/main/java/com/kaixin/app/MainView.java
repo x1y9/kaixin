@@ -43,7 +43,7 @@ public class MainView {
 	/*
 	 * default 处理，根据url
 	 *  看是否resource定义的页面，如果是直接返回resource页面
-	 *  否则返回404
+	 *  否则返回404页面（比返回404 code友好一些)
 	 */
 	
 	@GET
@@ -61,7 +61,7 @@ public class MainView {
 			path += ".ftl";
 		
 		URL resource = MainApplication.class.getResource(PropsUtil.get(PropsKeys.SYS_VIEW_PATH) + path);
-		if (resource == null)
+		if (resource == null) //throw new WebApplicationException(404);
 			path = "404.ftl";
 		
 		return new KxTemplate(path, reqContext, uriInfo, m);
