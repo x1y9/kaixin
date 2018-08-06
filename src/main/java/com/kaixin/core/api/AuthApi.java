@@ -130,7 +130,7 @@ public class AuthApi {
 				.executeUpdate();
 
 		//发送邮件
-		String link = PropsUtil.get(PropsKeys.SYS_URL) + "/forgot-reset?key=" + resetKey;
+		String link = PropsUtil.get(PropsKeys.SYS_SERVER_URL) + "/forgot-reset?key=" + resetKey;
 		KxApp.smtp.sendAsync(account,null, null, KxApp.locale.get("Reset-your-password"),
 				KxApp.locale.get("Click-this-link-to-reset-your-password:") + "<br/>" +  StringUtil.url2Anchor(link));
 	}

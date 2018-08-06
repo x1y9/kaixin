@@ -71,7 +71,10 @@ public class PropsKeys {
     public static final String SYS_ALL_LOCALES = "sys.all.locales";
 
     @PropsProperty(type = "string", defaultValue = "", needRestart = false, forClient = true, help = "系统的外部访问url")
-    public static final String SYS_URL = "sys.url";
+    public static final String SYS_SERVER_URL = "sys.server.url";
+
+    @PropsProperty(type = "string", defaultValue = "", needRestart = false, help = "系统的多个静态path(url)，逗号分隔")
+    public static final String SYS_ASSERT_PATH = "sys.assert.path";
 
     @PropsProperty(type = "string", defaultValue = "debug", needRestart = true, help = "系统运行模式, product|debug")
     public static final String SYS_ENV = "sys.env";

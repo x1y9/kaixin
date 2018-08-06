@@ -77,13 +77,19 @@ public class KxApp extends Application<KxConfiguration> implements ServerLifecyc
     public void initialize(Bootstrap<KxConfiguration> bootstrap) {
     	//因为jersey占据了/,这里的uri不能是/，只能用/public
     	bootstrap.addBundle(new AssetsBundle("/public", "/public", "index.html"));
+		//多个分应用可以占据不同的url，通过proerty配置
+		for (String sub: PropsUtil.getArray(PropsKeys.SYS_ASSERT_PATH)) {
+			if (sub.trim().length() > 0) {
+				bootstrap.addBundle(new AssetsBundle("/" + sub.trim(), "/" + sub.trim(), "index.html"));
+			}
+		}
+
     	bootstrap.addBundle(new ViewBundle<KxConfiguration>(){
     		@Override
     		public Map<String,Map<String,String>> getViewConfiguration(KxConfiguration config){
     			return config.view;
     		}
     	});
-    	
 	    bootstrap.addBundle(new MigrationsBundle<KxConfiguration>() {
 	        public DataSourceFactory getDataSourceFactory(KxConfiguration config) {
 	            return config.database;
@@ -104,12 +110,8 @@ public class KxApp extends Application<KxConfiguration> implements ServerLifecyc
     	locale = new KxLocale();
     	dataSource = configuration.database.build(environment.metrics(), "mainds");
     	sql = SqlFactory.createSql(configuration.database);
-
 		sql2o = new Sql2o(dataSource);
-		//jdbi = new DBIFactory().build(environment, configuration.database, (ManagedDataSource)dataSource, "jdbi");
-		//if (PropsUtil.getBoolean(PropsKeys.METRIC_JDBC_QUERY_ENABLE))
-		//	jdbi.setTimingCollector(new InstrumentedTimingCollector(MetricUtil.getMetric()));
-		
+
     	authenticator = new Authenticator(configuration.ldap, sql);
     	smtp = new KxSmtp();
     	executor = Executors.newFixedThreadPool(PropsUtil.getInteger(PropsKeys.SYS_EXECUTOR_THREADS_NUM));

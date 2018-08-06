@@ -111,13 +111,13 @@ goto end
 
 :do_dump
 @REM backup to backup.sql
-java -classpath .\target\kaixin.jar org.h2.tools.Script -url jdbc:h2:./kaixin -user sa
-@echo please edit the sql to remove schema statemen...
+call mvn compile exec:java -Dexec.mainClass="org.h2.tools.Script"  -Dexec.args="-url jdbc:h2:./kaixin -user sa"
+@echo please edit the sql to remove schema statement...
 goto end
 
 :do_restore
 @REM restore from backup.sql after migrate
-java -classpath .\target\kaixin.jar org.h2.tools.RunScript -url jdbc:h2:./kaixin -user sa
+call mvn compile exec:java -Dexec.mainClass="org.h2.tools.RunScript"  -Dexec.args="-url jdbc:h2:./kaixin -user sa"
 goto end
 
 :error_end

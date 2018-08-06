@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /*
- * 通过H2完成注解式事务声明
+ * 通过H2完成注解式事务声明，目前只能放在方法上，不能用在class上
  */
 
 @Target({ ElementType.CONSTRUCTOR, ElementType.METHOD })
