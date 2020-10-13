@@ -9,7 +9,7 @@
 @call yarn -version >nul 2>&1
 @IF %ERRORLEVEL% NEQ 0 echo you should install yarn & goto error_end
 @call quasar --version >nul 2>&1
-@IF %ERRORLEVEL% NEQ 0 echo you should install quasar-cli & goto error_end
+@IF %ERRORLEVEL% NEQ 0 echo you should yarn global add quasar-cli & goto error_end
 
 :do_para
 @if  "%1"=="help" goto do_help

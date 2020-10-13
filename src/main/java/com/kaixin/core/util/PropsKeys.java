@@ -82,8 +82,6 @@ public class PropsKeys {
     @PropsProperty(type = "boolean", defaultValue = "false", needRestart = false, help = "是否使能CORS")
     public static final String DEBUG_CORS_ENABLE = "debug.cors.enable";
 
-    @PropsProperty(type = "boolean", defaultValue = "true", needRestart = false, help = "是否支持注册")
-    public static final String SIGNUP_ENABLE = "signup.enable";
 
     /*
      *  邮件配置

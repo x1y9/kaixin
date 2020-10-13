@@ -119,6 +119,7 @@ public class PermissionUtil {
 	}
 	
 	private static List<Map> getFieldsByModelViewPermssion(Map<String, Object> permissionMap, String model, String view) {
+		//权限的定义支持通配符
 		String fieldDesc = (String)MapUtil.getCasscade(permissionMap,model,view);
 		if (fieldDesc == null)
 			fieldDesc = (String)MapUtil.getCasscade(permissionMap,model,KxConsts.VIEW_ALL);
@@ -127,11 +128,8 @@ public class PermissionUtil {
 		if (fieldDesc == null)
 			fieldDesc = (String)MapUtil.getCasscade(permissionMap,KxConsts.MODEL_ALL,KxConsts.VIEW_ALL);
 		
-		if (fieldDesc == null) {
-			if(isLoginUserAdmin())
-				return KxApp.profile.getModel(model).getJsFieldsByView(view);
-			else
-				return null;
+		if (fieldDesc == null) {			
+			return isLoginUserAdmin() ? KxApp.profile.getModel(model).getJsFieldsByView(view) : null;
 		}
 		else {
 			List<Map> defaultFields = KxApp.profile.getModel(model).getJsFieldsByView(view);
@@ -143,7 +141,7 @@ public class PermissionUtil {
 	/*
 	 * desc是一个json，比如
 	 *  ["name","content":{"readOnly":true},"type"]
-	 *  这个json会和缺省的view进行merge
+	 *  这个list做了一个简化，如果元素是字符，就直接复制缺省(比如上面的name和type)，如果是Map，则merge
 	 */
 	private static List<Map> mergeJsFeilds(List<Map> defaultFields, Map<String,Map> defaultFieldsMap, String fieldDesc) {
 		try {

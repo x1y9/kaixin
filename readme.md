@@ -17,7 +17,7 @@
 * 集成LDAP，可以和Windows域集成
 
 ## 运行
-安装好java7+, Maven 3+, Nodejs 8+, yarn
+安装好java7+, Maven 3+, Nodejs 8+, yarn, quasar-cli
 
 1. build migration #初始化数据库
 1. build run       #运行后台
@@ -64,6 +64,9 @@ java -jar ****.jar db migrate server.yml
 * 通过http://localhost:8000/sys/logger, 修改服务器端logger.
 * 通过http://localhost:8000/sys/metric, 查看服务器端性能统计.
 
+## Profile
+前台所有的模型数据、表单由src\main\resources\profile.json驱动，后台数据库由src\main\resources\migrations.xml驱动（支持增量），两者要一致。
+
 ## TODO
  * 权限设计优化
  * grid列宽不能调整
@@ -74,6 +77,10 @@ java -jar ****.jar db migrate server.yml
  * 后端jdbc metric还是ns，需要重新封装jdbc
  * upload接口Edge上传文件名不对
  * assets目录应该重定向到加/
+
+## Bug
+ * 创建表单的boolean不能修改 
+ * getPermissionsMapByUser guest和指定用户权限会重叠覆盖???
 
 ## LICENSE
 MIT
