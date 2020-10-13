@@ -46,26 +46,33 @@ export default {
       this.entityId = data ? data.id : -1
       this.options = {}
       this.modelDef.fields.forEach(f => {
-        // 新建的对象要处理缺省值, 但${now}是后台用的，无需处理
+        // 新建的对象要处理缺省值, 但${now}是后台用的，无需处理，用$set防止vue的reactivity不工作
         if (data == null && f.default != null && f.default !== '${now}') {
-          this.entity[f.name] = f.default
+          this.$set(this.entity, f.name, f.default)
         }
+
         // ref-popup组件需要传数组
         if (f.type === Consts.REFERENCE && !f.multiple) {
           this.entity[f.name] = this.entity[f.name] == null ? [] : [this.entity[f.name]]
         }
 
-        if (f.type === Consts.CHOICE && !f.multiple && this.entity[f.name] != null) {
-          this.entity[f.name] = this.entity[f.name][Consts.CHOICE_VALUE]
+        // Choice要将值替换
+        if (f.type === Consts.CHOICE && this.entity[f.name] != null) {
+          this.entity[f.name] = f.multiple ? this.entity[f.name].map(item => item[Consts.CHOICE_VALUE]) : this.entity[f.name][Consts.CHOICE_VALUE]
         }
 
         // 多值choice不能传空
-        if (f.type === Consts.CHOICE && f.multiple) {
-          this.entity[f.name] = this.entity[f.name] ? this.entity[f.name].map(item => item[Consts.CHOICE_VALUE]) : []
+        if (f.type === Consts.CHOICE && f.multiple && this.entity[f.name] == null) {
+          this.$set(this.entity, f.name, [])
         }
+
         // 富文本控件不允许空值
         if (f.type === Consts.RICH_TEXT && this.entity[f.name] == null) {
-          this.entity[f.name] = ''
+          this.$set(this.entity, f.name, '')
+        }
+        // 布尔控件不允许空值，否则第一次点击无效
+        if (f.type === Consts.BOOLEAN && this.entity[f.name] == null) {
+          this.$set(this.entity, f.name, false)
         }
       })
     }

@@ -67,16 +67,23 @@ export default {
           this.entity[f.name] = data[f.name] == null ? [] : [data[f.name]]
         }
 
-        if (f.type === Consts.CHOICE && !f.multiple && data[f.name] != null) {
-          this.entity[f.name] = data[f.name][Consts.CHOICE_VALUE]
+        // Choice要将值替换
+        if (f.type === Consts.CHOICE && this.entity[f.name] != null) {
+          this.entity[f.name] = f.multiple ? this.entity[f.name].map(item => item[Consts.CHOICE_VALUE]) : this.entity[f.name][Consts.CHOICE_VALUE]
         }
 
-        if (f.type === Consts.CHOICE && f.multiple) {
-          this.entity[f.name] = data[f.name] ? data[f.name].map(item => item[Consts.CHOICE_VALUE]) : []
+        // 多值choice不能传空,
+        if (f.type === Consts.CHOICE && f.multiple && this.entity[f.name] == null) {
+          this.$set(this.entity, f.name, [])
         }
+
         // 富文本控件不允许空值
         if (f.type === Consts.RICH_TEXT && data[f.name] == null) {
-          this.entity[f.name] = ''
+          this.$set(this.entity, f.name, '')
+        }
+        // 布尔控件不允许空值，否则第一次点击无效
+        if (f.type === Consts.BOOLEAN && this.entity[f.name] == null) {
+          this.$set(this.entity, f.name, false)
         }
       })
     }
