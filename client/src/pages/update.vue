@@ -3,7 +3,7 @@
     <h5>{{modelDef.label}}
       <q-btn flat v-if="entityId >= 0" color="red" class="float-right" @click="remove()"><q-icon name="delete"/>删除</q-btn>
     </h5>
-    <entity-form :entity="entity" :model="model" :model-def="modelDef" :view-def="modelDef" />
+    <entity-form :entity="entity" :model="model" :model-def="modelDef" :view-def="viewDef" />
     <p/>
     <q-field label=" " :label-width="2">
       <q-btn color="primary" @click="save()"><q-icon name="save"/>保存</q-btn>
@@ -22,6 +22,7 @@ export default {
     return {
       model: null,
       modelDef: null,
+      viewDef: null,
       entityId: null,
       entity: null,
       options: null
@@ -94,7 +95,7 @@ export default {
     this.model = this.$route.params['model']
     this.entityId = this.$route.params['entity']
     this.modelDef = this.$store.state.profile.modelsMap[this.model]
-    this.showFields = this.$store.state.login.permissions[this.model].edit
+    this.viewDef = this.$store.state.login.permissions[this.model].edit
     if (this.modelDef == null) {
       this.$router.replace('/error')
     }

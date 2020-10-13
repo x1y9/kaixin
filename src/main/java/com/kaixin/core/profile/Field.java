@@ -31,7 +31,7 @@ public class Field {
 	private String label;
 	private String target;
 	private String targetField;
-	private String defaultValue;
+	private Object defaultValue;
 	private boolean required;
 	private boolean multiple;
 	private Object attr;
@@ -71,12 +71,12 @@ public class Field {
 	}
 
 	@JsonProperty("default")
-	public String getDefault() {
+	public Object getDefault() {
 		return defaultValue;
 	}
 
 	@JsonProperty("default")
-	public void setDefault(String defaultValue) {
+	public void setDefault(Object defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 	

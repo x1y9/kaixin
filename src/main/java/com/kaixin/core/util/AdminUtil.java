@@ -394,7 +394,7 @@ public class AdminUtil {
         //创建时需要处理default值, 因为可能不在entity里，所以要遍历所有field
         if (origin == null) {
             for (Field field : model.getFields()) {
-                String defaultValue = field.getDefault();
+                Object defaultValue = field.getDefault();
                 if (defaultValue != null && result.get(field.getName()) == null) {
                     result.put(field.getName(), transDefault(defaultValue));
                 }
@@ -406,14 +406,14 @@ public class AdminUtil {
         return result;
     }
 
-    private static Object transDefault(String defaultValue) {
+    private static Object transDefault(Object defaultValue) {
         if (defaultValue == null)
             return null;
 
-        if (defaultValue.equals(KxConsts.PATTERN_NOW)) {
+        if (KxConsts.PATTERN_NOW.equals(defaultValue)) {
             return new Date();
         }
-        else if (defaultValue.equals(KxConsts.PATTERN_LOGINUSER)) {
+        else if (KxConsts.PATTERN_LOGINUSER.equals(defaultValue)) {
             return ThreadLocalUtil.get(KxConsts.TL_LOGIN_USER_ID);
         }
         else {

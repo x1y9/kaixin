@@ -1,7 +1,7 @@
 <template>
   <div v-if="entity">
     <h5>{{modelDef.label}}</h5>
-    <entity-form :entity="entity" :model="model" :model-def="modelDef" :view-def="modelDef" />
+    <entity-form :entity="entity" :model="model" :model-def="modelDef" :view-def="viewDef" />
     <p/>
     <q-field label=" " :label-width="2">
       <q-btn color="primary" @click="save()"><q-icon name="save"/>新建</q-btn>
@@ -20,6 +20,7 @@ export default {
     return {
       model: null,
       modelDef: null,
+      viewDef: null,
       copyId: null,
       entity: null,
       options: null
@@ -83,7 +84,7 @@ export default {
     this.model = this.$route.params['model']
     this.copyId = this.$route.params['entity']
     this.modelDef = this.$store.state.profile.modelsMap[this.model]
-    this.showFields = this.$store.state.login.permissions[this.model].create
+    this.viewDef = this.$store.state.login.permissions[this.model].create
     if (this.modelDef == null) {
       this.$router.replace('/error')
     }

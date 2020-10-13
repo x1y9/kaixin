@@ -54,13 +54,13 @@ goto end
 
 :do_dev
 cd client
-@if NOT EXIST node_modules call yarn
+call yarn
 call quasar dev
 goto end
 
 :do_client
 cd client
-@if NOT EXIST node_modules call yarn
+call yarn
 call quasar build
 goto end
 

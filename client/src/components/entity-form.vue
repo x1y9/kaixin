@@ -1,6 +1,6 @@
 <template>
   <div class="entity-form">
-    <template v-for="(item,index) in viewDef.fields" v-if="item.name !== 'id'">
+    <template v-for="(item,index) in viewDef" v-if="item.name !== 'id'">
       <q-field :label="item.label" :label-width="labelWidth" v-if="item.type === 'String'" :key="index">
         <q-input v-model="entity[item.name]" />
       </q-field>

@@ -13,8 +13,8 @@
     {name:"password",type:"Password",label:"密码"},
     {name:"name",type:"String",label:"姓名"},
     {name:"createDate",type:"Date",label:"创建时间", default:"${now}"},
-    {name:"isAdmin",type:"Boolean",label:"是否管理员",required:true, default:"false"},
-    {name:"disable",type:"Boolean",label:"禁用", required:true, default:"false"},
+    {name:"isAdmin",type:"Boolean",label:"是否管理员",required:true, default:false},
+    {name:"disable",type:"Boolean",label:"禁用", required:true, default:false},
     {name:"resetKey",type:"String",label:"复位码"},
     {name:"resetTime",type:"Datetime",label:"复位时间"},
     {name:"description",type:"Text",label:"描述"}
@@ -54,10 +54,10 @@
    fields:[
     {name:"id",type:"Long",label:"编号"},
     {name:"str",type:"String",label:"字符", default:"str"},
-    {name:"num",type:"Long",label:"整数", default:"999"},
+    {name:"num",type:"Long",label:"整数", default:999},
     {name:"createDate",type:"Date",label:"日期", default:"${now}",required:true},
     {name:"createTime",type:"Datetime",label:"时间", default:"${now}",required:true},
-    {name:"bool",type:"Boolean",label:"是否",required:true, default:"true"},
+    {name:"bool",type:"Boolean",label:"是否",required:true},
     {name:"file",type:"File",label:"文件",required:true},
     {name:"txt",type:"Text",label:"描述",required:true},
     {name:"rtf",type:"RichText",label:"富文本",required:true},

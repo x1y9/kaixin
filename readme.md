@@ -82,6 +82,7 @@ java -jar ****.jar db migrate server.yml
 
 ## Bug
 
+ * 新建的用户无权限
  * getPermissionsMapByUser guest和指定用户权限会重叠覆盖
 
 ## LICENSE
