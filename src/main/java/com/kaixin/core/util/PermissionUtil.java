@@ -60,7 +60,7 @@ public class PermissionUtil {
 						   .where(KxConsts.COL_PERMISSION_USERS, Sql.LIKE)
 						   .or(KxConsts.COL_PERMISSION_USERS, Sql.EQ)
 						   .or(KxConsts.COL_PERMISSION_USERS, Sql.IS_NULL))
-						   .setUnamedParameter(0, "[" + loginUser.get(KxConsts.ID) +"]")
+						   .setUnamedParameter(0, KxConsts.CHOICE_SEP + loginUser.get(KxConsts.ID) + KxConsts.CHOICE_SEP)
 						   .setUnamedParameter(1, "")
 						   .executeAndFetchRows();
 				
@@ -207,7 +207,7 @@ public class PermissionUtil {
 				.setUnamedParameter(1, KxConsts.MODEL_ALL)
 				.setUnamedParameter(2, action)
 				.setUnamedParameter(3, KxConsts.VIEW_ALL)
-				.setUnamedParameter(4, "%[" + user.get("id") + "]%")
+				.setUnamedParameter(4, "%" + KxConsts.CHOICE_SEP + user.get("id") + KxConsts.CHOICE_SEP + "%")
 				.executeAndFetchRows());
 		}
 

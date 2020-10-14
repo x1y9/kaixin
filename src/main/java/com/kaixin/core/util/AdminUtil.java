@@ -334,7 +334,7 @@ public class AdminUtil {
                                 check.add(id);
                         }
                     }
-                    result.put(key, StringUtils.join(check, KxConsts.MULTIPLE_SEPERATOR));
+                    result.put(key, StringUtils.join(check, KxConsts.CHOICE_SEP));
                 } catch (Exception e) {
                 }
             }
@@ -366,7 +366,10 @@ public class AdminUtil {
                         check.add((String)v);
                     }
                 }
-                result.put(key, StringUtils.join(check, KxConsts.MULTIPLE_SEPERATOR));
+                //合并一下，注意前后都加上分号以方便sql查询
+                String join = StringUtils.join(check, KxConsts.CHOICE_SEP);
+                join = join.length() > 0 ? (KxConsts.CHOICE_SEP + join + KxConsts.CHOICE_SEP) : join;
+                result.put(key, join);
             }
             else if (field.TYPE_PASSWORD.equalsIgnoreCase(field.getType()))
             {
@@ -472,7 +475,7 @@ public class AdminUtil {
                 }
                 else if (field.isChoiceMultiple() && value != null){
                     List<Map<String,String>> choices = new ArrayList<>();
-                    for (String item : value.toString().split(KxConsts.MULTIPLE_SEPERATOR)) {
+                    for (String item : value.toString().split(KxConsts.CHOICE_SEP)) {
                         String label = (String) MapUtil.searchMapList(field.getConvertedChoices(), KxConsts.CHOICE_VALUE, item, KxConsts.CHOICE_LABEL);
                         if (!GetterUtil.isEmpty(label)) {
                             Map<String, String> choice = new HashMap<String, String>();
@@ -515,7 +518,7 @@ public class AdminUtil {
             Field refManyField = fieldList.get(refManyNo);
             HashSet<String> idSet = new HashSet<String>();
             for (Map<String,Object> row : mapList) {
-                idSet.addAll(Arrays.asList(GetterUtil.getString(row.get("f" + refManyNo),"").split(KxConsts.MULTIPLE_SEPERATOR)));
+                idSet.addAll(Arrays.asList(GetterUtil.getString(row.get("f" + refManyNo),"").split(KxConsts.CHOICE_SEP)));
             }
             Query query = DbHandle.transactionInstance().query(sql
                     .select(refManyField.getTarget())

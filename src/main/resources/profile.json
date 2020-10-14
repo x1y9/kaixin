@@ -27,7 +27,7 @@
     {name:"users",type:"Reference", multiple: true, label:"用户",target:"user"},
     {name:"model",type:"Choice", multiple: true, label:"对象", required:true, choices:"permissionModels"},
     {name:"action",type:"Choice", multiple: true, label:"操作",required:true, choices:[
-     		{ label: "查看", 	value: "read" },
+     		{ label: "列表", 	value: "list" },
      		{ label: "创建",		value: "create" },
      		{ label: "编辑", 	value: "edit" },
      		{ label: "删除", 	value: "delete" }]},

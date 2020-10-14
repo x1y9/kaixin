@@ -58,6 +58,7 @@ public class KxConsts {
 	public static final String CHOICE_PERMISSION_MODELS = "permissionModels";
 	public static final String CHOICE_LABEL = "label";
 	public static final String CHOICE_VALUE = "value";
+	public static final String CHOICE_SEP = ",";
 
 	public static final String REQ_CONTEXT_LOGIN_USER = "loginUser";
 
@@ -79,7 +80,7 @@ public class KxConsts {
     public static final String FILE_APP_PROPERTIES = "app.properties";
 	public static final String RESOURCE_APP_PROPERTIES = "app.properties";
 
-	public static final String MULTIPLE_SEPERATOR = ",";
+	
 
 	//ThreadLocal变量
 	public static String TL_TRANSACTION_HANDLE = "transactionHandle";
