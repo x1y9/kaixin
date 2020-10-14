@@ -334,7 +334,9 @@ public class AdminUtil {
                                 check.add(id);
                         }
                     }
-                    result.put(key, StringUtils.join(check, KxConsts.CHOICE_SEP));
+                    String join = StringUtils.join(check, KxConsts.CHOICE_SEP);
+                    join = join.length() > 0 ? (KxConsts.CHOICE_SEP + join + KxConsts.CHOICE_SEP) : join;
+                    result.put(key, join);
                 } catch (Exception e) {
                 }
             }
@@ -542,6 +544,7 @@ public class AdminUtil {
 
         List<Map> retList = new ArrayList<Map>();
         if (value != null) {
+        	//因为保存的都是id，用非数字分割即可
             String[] splits = value.toString().split("[^0-9]+");
             for (String s : splits)
             {
