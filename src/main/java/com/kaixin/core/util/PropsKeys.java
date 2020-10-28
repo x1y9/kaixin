@@ -104,6 +104,9 @@ public class PropsKeys {
     /*
      * admin
      */
+    @PropsProperty(type = "int", defaultValue = "255", needRestart = false, help = "ADMIN列表页长字符串被截断的长度，设为0表示不截断")
+    public static final String ADMIN_LIST_STRING_TRUNCATE = "admin.list.string.truncate";
+    
     @PropsProperty(type = "string", defaultValue = "", needRestart = false, help = "ADMIN修改通知, 目前只在新建时通知")
     public static final String ADMIN_NOTIFICATION_EMAILS = "admin.notification.emails";
 

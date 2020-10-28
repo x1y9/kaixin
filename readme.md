@@ -67,6 +67,7 @@ java -jar ****.jar db migrate server.yml
 ## Profile
 前台所有的模型数据、表单由src\main\resources\profile.json驱动，后台数据库由src\main\resources\migrations.xml驱动（支持增量），两者要一致。
 
+* 表名应该小写，以避免Linux下兼容问题
 * 字段名应该统一小写且不超过32个字符，以避免跨数据库时兼容问题。
 
 ## TODO

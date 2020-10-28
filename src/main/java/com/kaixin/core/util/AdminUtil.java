@@ -63,7 +63,7 @@ public class AdminUtil {
             result.put("total", queryCount.executeScalar(Long.class));
 
         }
-        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows()));
+        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows(), PropsUtil.getInteger(PropsKeys.ADMIN_LIST_STRING_TRUNCATE)));
         return result;
     }
 
@@ -91,7 +91,7 @@ public class AdminUtil {
         for (Object value : bindValues) {
             query.setUnamedParameter(position++, value);
         }
-        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows()));
+        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows(), 0));
         result.put("fields", fieldList);
 
         return result;
@@ -117,7 +117,7 @@ public class AdminUtil {
         List<Map<String,Object>> entities = new ArrayList<Map<String,Object>>();
         entities.add(entity);
         Map<String, Map> refManyCache = buildReferenManyCache(fieldList, refManyList, entities);
-        return db2admin(model, fieldList, refManyList, refManyCache, entity);
+        return db2admin(model, fieldList, refManyList, refManyCache, 0, entity);
     }
 
     public static Map create(DbHandle handle, String model, Map<String,Object> entity) throws SQLException {
@@ -429,16 +429,18 @@ public class AdminUtil {
     /*
      * 处理数据库返回row到ngadmin的转换
      */
-    private static List<Map<String,Object>> db2admin(String model, List<Field> fieldList, List<Integer> refManyList, List<Map<String,Object>> mapList) throws SQLException {
+    private static List<Map<String,Object>> db2admin(String model, List<Field> fieldList, 
+    		List<Integer> refManyList, List<Map<String,Object>> mapList, int truncate) throws SQLException {
         List<Map<String,Object>> results = new ArrayList<Map<String,Object>>();
         Map<String, Map> refManyCache = buildReferenManyCache(fieldList, refManyList, mapList);
         for (Map<String,Object> item : mapList) {
-            results.add(db2admin(model, fieldList, refManyList, refManyCache, item));
+            results.add(db2admin(model, fieldList, refManyList, refManyCache, truncate, item));
         }
         return results;
     }
 
-    private static Map<String,Object> db2admin(String model, List<Field> fieldList, List<Integer> refManyList, Map<String, Map> refManyCache, Map<String,Object> row) {
+    private static Map<String,Object> db2admin(String model, List<Field> fieldList, List<Integer> refManyList, 
+    		Map<String, Map> refManyCache, int truncate, Map<String,Object> row) {
         Map<String,Object> result = new HashMap<String,Object>();
         if(KxApp.profile.getModel(model) == null)
             throw new RuntimeException("model not found");
@@ -488,8 +490,9 @@ public class AdminUtil {
                     }
                     result.put(field.getName(), choices);
                 }
-                else if (value instanceof Clob) {
-                    result.put(field.getName(), SqlUtil.clob2String((Clob)value));
+                else if (value instanceof Clob || value instanceof String) {                	
+                	String str = (value instanceof Clob) ? SqlUtil.clob2String((Clob)value) : (String)value;
+                    result.put(field.getName(), (str != null && truncate > 0 && truncate < str.length()) ? str.substring(0, truncate) : str);
                 }
                 else if (Field.TYPE_DATETIME.equalsIgnoreCase(field.getType())){
                     if (value != null)
