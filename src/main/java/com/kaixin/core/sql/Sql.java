@@ -101,6 +101,10 @@ public class Sql {
 		return table + "." + column;
 	}
 
+	public String escapeLike(String search) {
+		// mysql和h2的like中的下划线，可以加反斜杠转义
+		return "%" + search.replace("_", "\\_") + "%";
+	}
 	/*
 	 * SQL函数
 	 */

@@ -231,19 +231,23 @@ public class AdminUtil {
     }
 
     private static Condition filters2Condition(String modelName, String alias, Map<String,Map> joinMap,
-                                        String urlFilters, String scopeFilter, List<Object> bindValues) {
+                                        String search, String scopeFilter, List<Object> bindValues) {
 
         Condition condition = new Condition(Sql.ALWAYS_TRUE);
         Model model = KxApp.profile.getModel(modelName);
         Sql sql = KxApp.sql;
-        String [] keySuffix = new String[]     {">=",   "<=",   "<>",    "=",    ">",    "<",    "%"};
-        String [] keyComparator = new String[] {Sql.GE, Sql.LE, Sql.NEQ, Sql.EQ, Sql.GT, Sql.LT, Sql.LIKE};
+
         if(model == null)
             return null;
 
-        try {
-            Map<String,String> filtersMap = KxApp.mapper.readValue(urlFilters, Map.class);
-            for (String key : filtersMap.keySet()) {
+        Map<String,String> sMap = null; 
+        try { sMap = KxApp.mapper.readValue(search, Map.class);} catch(Exception e) {}
+        
+        if(sMap != null && sMap.size() > 0) {
+        	//json高级搜索
+            String [] keySuffix = new String[]     {">=",   "<=",   "<>",    "=",    ">",    "<",    "%"};
+            String [] keyComparator = new String[] {Sql.GE, Sql.LE, Sql.NEQ, Sql.EQ, Sql.GT, Sql.LT, Sql.LIKE};
+            for (String key : sMap.keySet()) {
 
                 String comparator = Sql.EQ;
                 String fieldName = key;
@@ -276,10 +280,6 @@ public class AdminUtil {
                 if (field == null)
                     continue;
 
-
-                if (field.isLikeSearch())
-                    comparator = Sql.LIKE;
-
                 if (targetModelName != null)
                     condition = condition.and(
                             sql.field((String)MapUtil.getCasscade(joinMap,targetModelName,"alias"), targetFieldName),
@@ -293,13 +293,23 @@ public class AdminUtil {
                 else
                     condition = condition.and(sql.field(alias,fieldName), comparator);
 
-                if (comparator.equals(Sql.LIKE))
-                    bindValues.add("%" + (String)filtersMap.get(fieldName) + "%");
-                else
-                    bindValues.add(filtersMap.get(key));
+                bindValues.add(sMap.get(key));
             }
         }
-        catch(Exception e){
+        else {
+        	//普通模糊搜索, 可以用 CONCAT(field1, field2, fieldn) LIKE "%Mary%" 
+        	// 或者MySQL的FTS： MATCH (shipping_name, billing_name, email) AGAINST ('mary')
+        	String c = "CONCAT(";
+        	for (Field f: model.getFields()) {
+        		if (f.isLikeSearch()) {
+        			c += f.getName() + ",";
+        		}
+        	}
+        	
+        	if (c.endsWith(",")) {
+        		condition = condition.and(c.substring(0, c.length() - 1) + ")", Sql.LIKE);
+        		bindValues.add(sql.escapeLike(search));
+        	}
         }
 
         //这里没有处理alias ???
