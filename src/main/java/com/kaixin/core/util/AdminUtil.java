@@ -296,7 +296,7 @@ public class AdminUtil {
                 bindValues.add(sMap.get(key));
             }
         }
-        else {
+        else if (!GetterUtil.isEmpty(search)){
         	//普通模糊搜索, 可以用 CONCAT(field1, field2, fieldn) LIKE "%Mary%" 
         	// 或者MySQL的FTS： MATCH (shipping_name, billing_name, email) AGAINST ('mary')
         	String c = "CONCAT(";
