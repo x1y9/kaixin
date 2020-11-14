@@ -76,8 +76,7 @@ export default {
       // 传进来的pagination不等于this.page, 传进来的filter等于this.search, 所以不用
       let start = (pagination.page - 1) * pagination.rowsPerPage
       let sort = (pagination.sortBy == null) ? '' : ('&_sort=' + pagination.sortBy)
-      let reverse = (pagination.descending == null) ? '' : ('&_reverse=' + pagination.descending)
-      // 等待后台实现多字段搜索, 暂时可以搜索 {name: "360"}
+      let reverse = (pagination.sortBy == null) ? '' : ('&_reverse=' + (pagination.descending || false))
       let filters = (this.search == null) ? '' : ('&_filters=' + encodeURIComponent(this.search))
       this.$http.get(`/api/admin/${this.model}?_number=${pagination.rowsPerPage}&_start=${start}&_retTotal=true${sort}${reverse}${filters}`).then(response => {
         this.page = pagination
