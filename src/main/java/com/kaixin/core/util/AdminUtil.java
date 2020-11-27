@@ -10,7 +10,9 @@ import com.kaixin.core.profile.Model;
 import com.kaixin.core.sql.Condition;
 import com.kaixin.core.sql.Sql;
 import com.kaixin.core.sql2o.Query;
+
 import org.apache.commons.lang3.StringUtils;
+
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -63,7 +65,31 @@ public class AdminUtil {
             result.put("total", queryCount.executeScalar(Long.class));
 
         }
-        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows(), PropsUtil.getInteger(PropsKeys.ADMIN_LIST_STRING_TRUNCATE)));
+        
+        //处理搜索的截断, 并且返回的字符串是过滤后最接近搜索字符串的上下文。
+        List<Map<String, Object>> rows = db2admin(model, fieldList,refManyList, query.executeAndFetchRows());
+        int truncat = PropsUtil.getInteger(PropsKeys.ADMIN_LIST_STRING_TRUNCATE);
+        if (truncat > 0) {
+	        for (Map<String,Object> row : rows) {
+	        	for (String key: row.keySet()) {
+	        		Object value = row.get(key);
+	        		if (value instanceof String) {
+	        			String sval = (String)value;
+	        			if (sval.length() > truncat) {
+	        				int begin = 0;
+	        				int end = truncat;
+	        				int idx = GetterUtil.isEmpty(filters) ? -1 : sval.toLowerCase().indexOf(filters.toLowerCase()); 
+	        				if (idx > -1) {
+	        					begin = Math.max(0, idx - 100);
+	        					end = Math.min(sval.length(), truncat + idx - 100);
+	        				}
+	        				row.put(key, sval.substring(begin, end));
+	        			}
+	        		}
+	        	}
+	        }
+        }
+        result.put("list", rows);        
         return result;
     }
 
@@ -91,7 +117,7 @@ public class AdminUtil {
         for (Object value : bindValues) {
             query.setUnamedParameter(position++, value);
         }
-        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows(), 0));
+        result.put("list", db2admin(model, fieldList,refManyList, query.executeAndFetchRows()));
         result.put("fields", fieldList);
 
         return result;
@@ -117,7 +143,7 @@ public class AdminUtil {
         List<Map<String,Object>> entities = new ArrayList<Map<String,Object>>();
         entities.add(entity);
         Map<String, Map> refManyCache = buildReferenManyCache(fieldList, refManyList, entities);
-        return db2admin(model, fieldList, refManyList, refManyCache, 0, entity);
+        return db2admin(model, fieldList, refManyList, refManyCache, entity);
     }
 
     public static Map create(DbHandle handle, String model, Map<String,Object> entity) throws SQLException {
@@ -299,7 +325,7 @@ public class AdminUtil {
         else if (!GetterUtil.isEmpty(search)){
         	//普通模糊搜索, 可以用 CONCAT(field1, field2, fieldn) LIKE "%Mary%" 
         	// 或者MySQL的FTS： MATCH (shipping_name, billing_name, email) AGAINST ('mary')
-        	String c = "CONCAT(";
+        	String c = "LOWER(CONCAT(";
         	for (Field f: model.getFields()) {
         		if (f.isLikeSearch()) {
         			c += f.getName() + ",";
@@ -307,7 +333,7 @@ public class AdminUtil {
         	}
         	
         	if (c.endsWith(",")) {
-        		condition = condition.and(c.substring(0, c.length() - 1) + ")", Sql.LIKE);
+        		condition = condition.and(c.substring(0, c.length() - 1) + "))", Sql.LIKE);
         		bindValues.add(sql.escapeLike(search));
         	}
         }
@@ -440,17 +466,17 @@ public class AdminUtil {
      * 处理数据库返回row到ngadmin的转换
      */
     private static List<Map<String,Object>> db2admin(String model, List<Field> fieldList, 
-    		List<Integer> refManyList, List<Map<String,Object>> mapList, int truncate) throws SQLException {
+    		List<Integer> refManyList, List<Map<String,Object>> mapList) throws SQLException {
         List<Map<String,Object>> results = new ArrayList<Map<String,Object>>();
         Map<String, Map> refManyCache = buildReferenManyCache(fieldList, refManyList, mapList);
         for (Map<String,Object> item : mapList) {
-            results.add(db2admin(model, fieldList, refManyList, refManyCache, truncate, item));
+            results.add(db2admin(model, fieldList, refManyList, refManyCache, item));
         }
         return results;
     }
 
     private static Map<String,Object> db2admin(String model, List<Field> fieldList, List<Integer> refManyList, 
-    		Map<String, Map> refManyCache, int truncate, Map<String,Object> row) {
+    		Map<String, Map> refManyCache, Map<String,Object> row) {
         Map<String,Object> result = new HashMap<String,Object>();
         if(KxApp.profile.getModel(model) == null)
             throw new RuntimeException("model not found");
@@ -500,9 +526,8 @@ public class AdminUtil {
                     }
                     result.put(field.getName(), choices);
                 }
-                else if (value instanceof Clob || value instanceof String) {                	
-                	String str = (value instanceof Clob) ? SqlUtil.clob2String((Clob)value) : (String)value;
-                    result.put(field.getName(), (str != null && truncate > 0 && truncate < str.length()) ? str.substring(0, truncate) : str);
+                else if (value instanceof Clob) {                	
+                	result.put(field.getName(), SqlUtil.clob2String((Clob)value));
                 }
                 else if (Field.TYPE_DATETIME.equalsIgnoreCase(field.getType())){
                     if (value != null)
