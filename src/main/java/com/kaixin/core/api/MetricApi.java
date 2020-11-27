@@ -3,6 +3,7 @@ package com.kaixin.core.api;
 import com.codahale.metrics.Timer;
 import com.kaixin.core.app.KxTemplate;
 import com.kaixin.core.util.MetricUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+
 import java.util.*;
 
 @Path("/api/metric")
@@ -30,6 +32,18 @@ public class MetricApi {
 		
 	}
 
+	@GET
+	@Path("memory")
+	public Map memory() {
+		Map<String,Object> result = new HashMap<>();
+		Runtime runtime = Runtime.getRuntime();
+		//这个可能是异步的
+        runtime.gc();
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+        result.put("used", memory / 1024 /1024);
+		return result;
+	}
+	
 	@GET
 	@Path("timer")
 	public Object timer(@QueryParam("name") String name) {
