@@ -3,6 +3,7 @@ package com.kaixin.core.filter;
 import com.kaixin.core.util.MetricUtil;
 import com.kaixin.core.util.PropsKeys;
 import com.kaixin.core.util.PropsUtil;
+
 import org.glassfish.jersey.server.monitoring.ApplicationEvent;
 import org.glassfish.jersey.server.monitoring.ApplicationEventListener;
 import org.glassfish.jersey.server.monitoring.RequestEvent;
@@ -38,6 +39,7 @@ public class MetricListener implements ApplicationEventListener {
                 case RESOURCE_METHOD_FINISHED:
                     String url = requestEvent.getContainerRequest().getMethod().toLowerCase() + "." + requestEvent.getContainerRequest().getPath(false);
     	    		MetricUtil.updateTimer(PropsUtil.getBoolean(PropsKeys.METRIC_REST_REQUEST_ENABLE), "http." + url, startTime);
+
                     break;
             }
         }

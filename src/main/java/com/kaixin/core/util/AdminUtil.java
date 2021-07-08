@@ -323,9 +323,9 @@ public class AdminUtil {
             }
         }
         else if (!GetterUtil.isEmpty(search)){
-        	//普通模糊搜索, 可以用 CONCAT(field1, field2, fieldn) LIKE "%Mary%" 
-        	// 或者MySQL的FTS： MATCH (shipping_name, billing_name, email) AGAINST ('mary')
-        	String c = "LOWER(CONCAT(";
+        	//普通模糊搜索, 可以用 CONCAT_WS(',',field1, field2, fieldn) LIKE "%Mary%" 
+        	// 不能用concat，因为mysql的concat，如果有一个field为null，就返回null
+        	String c = "LOWER(CONCAT_WS(',',";
         	for (Field f: model.getFields()) {
         		if (f.isLikeSearch()) {
         			c += f.getName() + ",";

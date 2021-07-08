@@ -170,7 +170,6 @@ public class Field {
 
 		return TYPE_STRING.equalsIgnoreCase(type) || TYPE_TEXT.equalsIgnoreCase(type)
 			|| TYPE_RICH.equalsIgnoreCase(type) || TYPE_FILE.equalsIgnoreCase(type)
-			|| TYPE_DATE.equalsIgnoreCase(type) || TYPE_DATETIME.equalsIgnoreCase(type)
 			|| TYPE_PASSWORD.equalsIgnoreCase(type);
 	}
 
